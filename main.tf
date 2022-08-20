@@ -161,32 +161,6 @@ resource "azurerm_virtual_machine" "main2" {
         disable_password_authentication = false
     }
 
-    provisioner "remote-exec" {
-        connection {
-            host     = azurerm_public_ip.main1.fqdn
-            type     = "ssh"
-            user     = "adminuser2"
-            password = "admin@1234"
-        }
-        inline = [
-            "sudo wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -",
-            "sudo chmod 777 /etc/apt/sources.list",
-            "sudo echo 'deb http://pkg.jenkins.io/debian-stable binary/' >> /etc/apt/sources.list",
-            "sudo apt-get update",
-            "sudo apt-get install -y jenkins=2.32.1",
-            "cd /usr/share/jenkins",
-            "sudo service jenkins stop",
-            "sudo mv jenkins.war jenkins.war.old",
-            "sudo wget https://updates.jenkins-ci.org/latest/jenkins.war",
-            "sudo service jenkins start",
-            "cd  ",
-            "sudo curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash",
-            "sudo wget https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip",
-            "sudo apt-get install -y unzip",
-            "sudo unzip terraform_0.13.3_linux_amd64.zip",
-            "sudo cp terraform /usr/bin/",
-            "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
-        ]
-    }
+    
 
 }
